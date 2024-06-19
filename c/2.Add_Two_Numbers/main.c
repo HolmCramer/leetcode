@@ -52,11 +52,11 @@ struct ListNode* addTwoNumbers(struct ListNode* l1, struct ListNode* l2) {
         current_result_node.val = sum;
         current_result_node.next = ptr_next_result_node;
 
-        if (l1_next.next != NULL){
+        if (l1->next != NULL){
             struct ListNode l1_next = *l1_val.next;
             l1_val = *l1_val.next;
         }
-        if (l2_next.next != NULL){
+        if (l2->next != NULL){
             struct ListNode l2_next = *l2_val.next;
             l2_val = *l2_val.next;
         }
