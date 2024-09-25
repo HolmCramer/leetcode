@@ -5,125 +5,58 @@
 #include <malloc.h>
 
 
-char* longestPalindromeOld(char* s)
+int checkForPalindrome(char* s, int start , int end)
 {
-    char result_str[strlen(s)+1];
-    result_str[0] = '\0';
     char sub_str[strlen(s)+1];
     sub_str[0] = '\0';
+    int pal_len = end + 1;
+    int sub_len;
     int k = 0;
-    int sub_len = 0;
-    int res_len = 0;
 
-    if (strlen(s) == 0)
+    while (s[start] == s[end])
     {
-        result_str[0] = '\0';
-    }
-    else if (strlen(s) == 1)
-    {
-        result_str[0] = s[0];
-        result_str[1] = '\0';
-    }
-    else 
-    {
-        char* left_ptr = &s[0];
-        char* left_inner_ptr;
-        char* right_ptr = &s[1];
-        char* right_inner_ptr;
-
-        for (int i=0; i < strlen(s)-1; i++)
+        sub_str[k] = s[start];
+        sub_str[k+1] = '\0';
+        k++;
+        if (start == end || end-start == 1)
         {
-            for (int j=0; j < 2; j++)
+            sub_len = strlen(sub_str);
+            k = 0;
+
+            for (int i = 0; i < sub_len; i++)
             {
-                if (*left_ptr == *right_ptr)
-                {
-                    left_inner_ptr = left_ptr;
-                    right_inner_ptr = right_ptr;
-                    
-                    if (j == 1)
-                    {
-                        sub_str[0] = s[i+1];
-                        sub_str[1] = '\0';
-                        k = 1;
-                    }
-                    else
-                    {
-                        sub_str[0] = '\0';
-                        k = 0;
-                    }
-                
-                    while (*left_inner_ptr == *right_inner_ptr && *right_inner_ptr != '\0')
-                    {
-                        sub_str[k] = *left_inner_ptr;
-                        sub_str[k+1] = '\0';
-                        k++;
-                        right_inner_ptr++;
-                        if (left_inner_ptr == s)
-                        {
-                            break;
-                        }
-                        else 
-                        {
-                            left_inner_ptr--;
-                        }
-                    }
-                }
-                else if (strlen(result_str) == 0)
-                {
-                    result_str[i] = s[i];
-                    result_str[i+1] = '\0';
-                }
-
-                if (j == 0 && i < strlen(s)-1)
-                {
-                    right_ptr++;
-                }
-
-                k = 0;
-                
-                sub_len = strlen(sub_str);
-                res_len = strlen(result_str);
-
-                if (sub_len*2-j > res_len)
-                {
-                    for (int n = sub_len-1; n >= 0; n--)
-                    {
-                        result_str[k] = sub_str[n];
-                        result_str[k+1] = '\0';
-                        k++;
-                    }
-                    
-                    for (int n = 0+j; n < sub_len; n++)
-                    {
-                        result_str[k] = sub_str[n];
-                        result_str[k+1] = '\0';
-                        k++;
-                    }
-                }
-                sub_str[0] = '\0';
+                s[i] = sub_str[i];
+                s[i+1] = '\0';
+                k++;
             }
-            left_ptr++;
-        }
-    }
+            
+            if (pal_len % 2 != 0 && sub_len > 1 || start == end)
+            {
+                sub_len = sub_len - 1;
+            }
 
-    for (int i = 0; i < strlen(result_str); i++)
-    {
-        s[i] = result_str[i];
-        s[i+1] = '\0';
+            for (int n = sub_len-1; n >= 0; n--)
+            {
+                s[k] = sub_str[n];
+                s[k+1] = '\0';
+                k++;
+            }
+            return 0;
+        }
+        start++;
+        end--;
     }
-    
-    return s;
+    printf("\n");
+    return 1; 
 }
+
 
 char* longestPalindrome(char* s)
 {
-    char result_str[strlen(s)+1];
-    result_str[0] = '\0';
-    char sub_str[strlen(s)+1];
-    sub_str[0] = '\0';
-    int k = 0;
-    int sub_len = 0;
-    int res_len = 0;
+    int counter, i;
+    counter = i = 0;
+    int j = strlen(s)-1;
+    int flag = 1;
 
     if (!s || !*s)
     {
@@ -131,30 +64,39 @@ char* longestPalindrome(char* s)
     }
     else
     {
-        for (int i = 0; i < strlen(s)-1; i++)
+        while (counter <= (int)strlen(s) && (i == 1 && j == 1) != 1 && flag != 0)
         {
-            for (int j = strlen(s); j >= i; j--)
+            printf("i: %i, j: %i, c: %i\n", i, j, counter);
+
+            flag = checkForPalindrome(s, i, j);
+
+            if (j > (int)strlen(s)-2)
             {
-                if (s[i] == s[j])
-                {
-                    sub_str[k] = s[i];
-                    sub_str[k+1] = '\0';
-                    k++;
-                }
+                counter++;
+                j-=counter;
+                i=0;
+            }
+            else
+            {
+                i++;
+                j++;
             }
         }
     }
+    return s;
 }
 
 int main(int argc, char const *argv[])
 {
     // char test_str[] = "abcbabcbldkashdolhjasoi";
-    //char test_str[] = "aba";
-    //char test_str[] = "abcdedcbaxxx";
+    //char test_str[] = "abba";
+    // char test_str[] = "abcdedcbax";
     //char test_str[] = "babad";
     //char test_str[] = "cbbd";
     //char test_str[] = "babad";
-    char test_str[] = "ac";
+    char test_str[] = "rgczcpratwyqxaszbuwwcadruayhasynuxnakpmsyhxzlnxmdtsqqlmwnbxvmgvllafrpmlfuqpbhjddmhmbcgmlyeypkfpreddyencsdmgxysctpubvgeedhurvizgqxclhpfrvxggrowaynrtuwvvvwnqlowdihtrdzjffrgoeqivnprdnpvfjuhycpfydjcpfcnkpyujljiesmuxhtizzvwhvpqylvcirwqsmpptyhcqybstsfgjadicwzycswwmpluvzqdvnhkcofptqrzgjqtbvbdxylrylinspncrkxclykccbwridpqckstxdjawvziucrswpsfmisqiozworibeycuarcidbljslwbalcemgymnsxfziattdylrulwrybzztoxhevsdnvvljfzzrgcmagshucoalfiuapgzpqgjjgqsmcvtdsvehewrvtkeqwgmatqdpwlayjcxcavjmgpdyklrjcqvxjqbjucfubgmgpkfdxznkhcejscymuildfnuxwmuklntnyycdcscioimenaeohgpbcpogyifcsatfxeslstkjclauqmywacizyapxlgtcchlxkvygzeucwalhvhbwkvbceqajstxzzppcxoanhyfkgwaelsfdeeviqogjpresnoacegfeejyychabkhszcokdxpaqrprwfdahjqkfptwpeykgumyemgkccynxuvbdpjlrbgqtcqulxodurugofuwzudnhgxdrbbxtrvdnlodyhsifvyspejenpdckevzqrexplpcqtwtxlimfrsjumiygqeemhihcxyngsemcolrnlyhqlbqbcestadoxtrdvcgucntjnfavylip";
+    //char test_str[] = "SQQSYYSQQS";
+    //char test_str[] = "xxssbssx";
     // char result[strlen(test_str)];
     // result[0] = '\0';
     //char* result_ptr = result;
